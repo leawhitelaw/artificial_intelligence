@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/leawhitelaw/Desktop/CLionProjects/cavern_cw/main.cpp
+utility
+-
+iostream
+-
+fstream
+-
+vector
+-
+string
+-
+sstream
+-
+stack
+-
+math.h
+-
+float.h
+-
+algorithm
+-
+map
+-
+
