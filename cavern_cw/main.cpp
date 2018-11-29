@@ -75,7 +75,7 @@ vector<int> a_star(node_c *start_node, node_c *end_node, vector<node_c> nodes) {
     //------------------whilst open list is not empty------------------
     while (!open_list.empty())
     {
-        node_c neighbour;
+
         double lowest_f = FLT_MAX;
         //-----------node with lowest f score is current node-----------
         for (int i = 0; i < open_list.size(); i++) {
@@ -94,14 +94,9 @@ vector<int> a_star(node_c *start_node, node_c *end_node, vector<node_c> nodes) {
                 current_node->neighbours = nodes[i].neighbours;
             }
         }
-
         //---------if current node is the final node-> build path-------
         if(current_node->id == end_node->id) {
             path = create_path(parent_map, current_node, path, closed_list);
-            for(int i=0; i< path.size(); i++)
-            {
-                cout << path[i] << endl;
-            }
             return path;
         }
 
@@ -130,17 +125,14 @@ vector<int> a_star(node_c *start_node, node_c *end_node, vector<node_c> nodes) {
             else if(temp_g_score >= g_score_map[neighbour->id]) {
                 continue;
             }
-            parent_map.insert(pair<int, int>(neighbour->id, current_node->id));
-            g_score_map.insert(pair<int, double>(neighbour->id, temp_g_score));
-            f_score_map.insert(pair<int, double>(neighbour->id, g_score_map[neighbour->id] + distance(neighbour, end_node)));
+            parent_map[neighbour->id] = current_node->id;
+            g_score_map[neighbour->id] = temp_g_score;
+            f_score_map[neighbour->id] = (g_score_map[neighbour->id] + distance(neighbour, end_node));
         }
     }
     //---------------------if no path found, return 0-----------------
     path.push_back(0);
     for(int i=0; i< path.size(); i++)
-    {
-        cout << path[i] << endl;
-    }
     return path;
 
 }
@@ -148,10 +140,11 @@ vector<int> a_star(node_c *start_node, node_c *end_node, vector<node_c> nodes) {
 int main(int argc, char* argv[]){
     //----------- check argument being used appropriately--------
     if(argc!=2)
-        cout << "Usage: /program arg1.cav" <<endl;
+        cout << "Usage: my_program.cpp <cav_file>" <<endl;
     else {
         //-------------open cav file------------------
-        ifstream cav_file(argv[1]);
+        string str_cav = ".cav";
+        ifstream cav_file(argv[1]+ str_cav);
         if(!cav_file.is_open())
             cout<<"Could not open file";
         else{
@@ -201,7 +194,18 @@ int main(int argc, char* argv[]){
             }
 
             //============= run A Star function ===================
-            a_star(&nodes_list[0], &nodes_list[no_nodes-1], nodes_list);
+            vector<int> final_path = a_star(&nodes_list[0], &nodes_list[no_nodes-1], nodes_list);
+
+            fstream fs;
+            string s = argv[1];
+            string delimiter = ".";
+            s = s.substr(0, s.find(delimiter));
+            fs.open(s + ".csn", fstream::in | fstream:: out | fstream::app);
+            for(int i = (final_path.size() - 1); i >= 0; i--){
+                if(i < final_path.size()-1) fs << " ";
+                fs << final_path[i];
+            }
+            fs.close();
 
             cout << "\n debug" << endl;
 
