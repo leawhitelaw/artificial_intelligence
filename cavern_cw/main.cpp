@@ -207,10 +207,6 @@ int main(int argc, char* argv[]){
             }
             fs.close();
 
-            cout << "\n debug" << endl;
-
-
-
 
         }//end else
     }//end else
